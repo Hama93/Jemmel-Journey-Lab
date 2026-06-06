@@ -1,0 +1,5 @@
+Flask==2.3.0
+python-dotenv==1.0.0
+firebase-admin==6.6.0
+Werkzeug==2.3.0
+gunicorn==22.0.0
