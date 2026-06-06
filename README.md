@@ -84,6 +84,7 @@ Set one Firebase credential option:
 ## Render Deployment
 1. Push this repository to GitHub
 2. Create a new Web Service on Render from the repo
+	- Render will use `runtime.txt` (Python `3.11.9`)
 3. Build command:
 
 ```bash
@@ -93,7 +94,7 @@ pip install -r requirements.txt
 4. Start command:
 
 ```bash
-gunicorn run:app
+gunicorn app:app
 ```
 
 5. Add environment variables in Render dashboard:
