@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Weather</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/weather.css') }}">
+    <style>
+        /* Title Styling */
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 3em;
+            color: #F0F8FF;
+            margin: 20px 0;
+            animation: glow 2s ease-out infinite alternate;
+            text-shadow: 0 0 8px #000, 0 0 16px #000, 0 0 24px #333;
+        }
+
+        /* Container Styling */
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin: 20px auto;
+            max-width: 1200px;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Map Styling */
+        #map {
+            height: 600px;
+            width: 55%;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        /* Weather Card Styling */
+        .weather-container {
+            width: 35%;
+            padding: 20px;
+            border: 2px solid rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s;
+            background: blue;
+            backdrop-filter: blur(8px);
+        }
+
+        .weather-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 10px #333, 0 0 20px #111;
+        }
+
+        /* Hourly Forecast Styling */
+        #hourly-forecast {
+            margin-top: 20px;
+            text-align: left;
+            color: #FFF;
+            border: 2px solid rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            backdrop-filter: blur(8px);
+            max-height: 300px;
+            /* Increased height for 12 hours */
+            overflow-y: auto;
+            /* Enable scrolling */
+        }
+
+        #hourly-forecast ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #hourly-forecast li {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            transition: background 0.3s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #hourly-forecast li:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .weather-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* Weather Icons */
+        .sunny {
+            background-image: url('/static/img/icons/sun.png');
+        }
+
+        .cloud-day {
+            background-image: url('/static/img/icons/cloud_day.png');
+        }
+
+        .cloud-night {
+            background-image: url('/static/img/icons/cloud_night.png');
+        }
+
+        .rainy {
+            background-image: url('/static/img/icons/rain.png');
+        }
+
+        .moon {
+            background-image: url('/static/img/icons/moon.png');
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2980b9;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1C658C;
+        }
+    </style>
+    <!-- base:css -->
+    <link rel="stylesheet" href="static/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="static/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="static/css/style_spica.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="static/img/favicon.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container-scroller d-flex">
+        <!-- partial:./partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item sidebar-category">
+                    <p>Navigation</p>
+                    <span></span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">
+                        <i class="mdi mdi-view-quilt menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                        <!-- <div class="badge badge-info badge-pill">2</div> -->
+                    </a>
+                </li>
+                <li class="nav-item sidebar-category">
+                    <p>What to do next?</p>
+                    <span></span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/local_experiences">
+                        <i class="mdi mdi-magnify menu-icon"></i>
+                        <span class="menu-title">Find local experiences</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/preferences">
+                        <i class="mdi mdi-clock menu-icon"></i>
+                        <span class="menu-title">Find iteneraries</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pages/icons/mdi.html">
+                        <i class="mdi mdi-emoticon menu-icon"></i>
+                        <span class="menu-title">Icons</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper" style="background-image: url('/static/img/other/navbar-cover.jpg');
+        background-size: cover;
+       ">
+            <!-- partial:./partials/_navbar.html -->
+            <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-xl-start">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button"
+                        data-toggle="minimize">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                    <!--<div class="navbar-brand-wrapper">
+            <a class="navbar-brand brand-logo" href="index.html"><img src="static/img/logo.svg" alt="logo"/></a>
+            <a class="navbar-brand brand-logo-mini" href="index.html"><img src="static/img/logo-mini.svg" alt="logo"/></a>
+          </div>-->
+                    <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, {{username}}</h4>
+                </div>
+                <div class="navbar-menu-wrapper navbar-search-wrapper d-none d-lg-flex align-items-center">
+
+                    <ul class="navbar-nav navbar-nav-right">
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                <img src="static/img/faces/face5.jpg" alt="profile" />
+                                <span class="nav-profile-name">{{username}}</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                                aria-labelledby="profileDropdown">
+                                <a class="dropdown-item">
+                                    <i class="mdi mdi-settings text-primary"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="/signout">
+                                    <i class="mdi mdi-logout text-primary"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link icon-link">
+                                <i class="mdi mdi-plus-circle-outline"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{url_for('main.preferences')}}" class="nav-link icon-link">
+                                <i class="mdi mdi-web"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <h1>Location and Weather</h1>
+                    <div class="container">
+                        <div id="map"></div>
+                        <div class="weather-container">
+                            <div id="weather"></div>
+                            <div id="hourly-forecast">
+                                <h2>Hourly Forecast</h2>
+                                <ul id="hourly-list"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="footer">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright ©
+                                    ia_warriors 2024</span>
+                                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Distributed
+                                    By: <a href="https://www.themewagon.com/" target="_blank">Tunisie Tourism</a></span>
+                                <!--<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>-->
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+    <!-- base:js -->
+    <script src="static/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <script src="static/vendors/chart.js/Chart.min.js"></script>
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="static/js/off-canvas.js"></script>
+    <script src="static/js/hoverable-collapse.js"></script>
+    <script src="static/js/template.js"></script>
+    <!-- endinject -->
+    <!-- plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- Custom js for this page-->
+    <script src="static/js/dashboard.js"></script>
+    <!-- End custom js for this page-->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([33.8869, 9.5375], 8); // Default view to Tunisia
+
+        // Load OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+        async function getLocationCoordinates(locationName) {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${locationName}`);
+            const data = await response.json();
+            if (data.length > 0) {
+                return { latitude: data[0].lat, longitude: data[0].lon };
+            } else {
+                throw new Error("Location not found");
+            }
+        }
+        async function getLocationCoordinates(locationName) {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${locationName}`);
+            const data = await response.json();
+            if (data.length > 0) {
+                return { latitude: data[0].lat, longitude: data[0].lon };
+            } else {
+                throw new Error("Location not found");
+            }
+        }
+        ll = "{{location}}";
+        if (ll) {
+            
+            getLocationCoordinates(ll + ', Tunisia')
+                .then(coordinates => {
+                    map.setView([coordinates.latitude, coordinates.longitude], 13);
+                    L.marker([coordinates.latitude, coordinates.longitude]).addTo(map)
+                        .bindPopup(ll + ', Tunisia')
+                        .openPopup();
+                    fetch(`/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.current && data.hourly) {
+                                // Handle current weather
+                                const weatherCondition = data.current.weather[0].main.toLowerCase();
+                                const iconClass = getWeatherIcon(weatherCondition);
+                                const weatherHTML = `
+                                    <div class="weather-info">
+                                        <div class="weather-icon ${iconClass}"></div>
+                                        <div class="weather-details">
+                                            <h2>Weather Information</h2>
+                                            <p>Temperature: ${data.current.main.temp}°C</p>
+                                            <p>Condition: ${data.current.weather[0].description}</p>
+                                        </div>
+                                    </div>
+                                    <div class="location">${data.current.name}</div>
+                                `;
+                                document.getElementById('weather').innerHTML = weatherHTML;
+
+                                // Populate hourly forecast for the next 12 hours
+                                const hourlyList = document.getElementById('hourly-list');
+                                hourlyList.innerHTML = ''; // Clear any existing content
+                                for (let i = 0; i < 12; i++) { // Show next 12 hours
+                                    const hour = data.hourly[i];
+                                    const date = new Date(hour.dt * 1000);
+                                    const hours = date.getHours();
+                                    const temp = hour.main.temp;
+                                    const desc = hour.weather[0].description;
+                                    const icon = getWeatherIcon(desc, hours >= 6 && hours < 18);
+
+                                    const li = document.createElement('li');
+                                    li.innerHTML = `
+                                        <div class="weather-icon ${icon}"></div>
+                                        <p>${hours}:00 - ${temp}°C, ${desc}</p>
+                                    `;
+                                    hourlyList.appendChild(li);
+                                }
+                            } else {
+                                document.getElementById('weather').innerHTML = '<p>Weather data not available.</p>';
+                            }
+                        });
+                })
+                .catch(error => {
+                    console.error("Error:", error.message);
+
+                })
+        } else {
+            // Get user's location using the Geolocation API
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+
+                        // Add a marker for the user's location
+                        const userMarker = L.marker([lat, lon]).addTo(map)
+                            .bindPopup('You are here!')
+                            .openPopup();
+
+                        // Center the map on user's location
+                        map.setView([lat, lon], 13);
+
+                        // Fetch weather data from server
+                        fetch(`/weather?lat=${lat}&lon=${lon}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data && data.current && data.hourly) {
+                                    // Handle current weather
+                                    const weatherCondition = data.current.weather[0].main.toLowerCase();
+                                    const iconClass = getWeatherIcon(weatherCondition);
+                                    const weatherHTML = `
+                                    <div class="weather-info">
+                                        <div class="weather-icon ${iconClass}"></div>
+                                        <div class="weather-details">
+                                            <h2>Weather Information</h2>
+                                            <p>Temperature: ${data.current.main.temp}°C</p>
+                                            <p>Condition: ${data.current.weather[0].description}</p>
+                                        </div>
+                                    </div>
+                                    <div class="location">${data.current.name}</div>
+                                `;
+                                    document.getElementById('weather').innerHTML = weatherHTML;
+
+                                    // Populate hourly forecast for the next 12 hours
+                                    const hourlyList = document.getElementById('hourly-list');
+                                    hourlyList.innerHTML = ''; // Clear any existing content
+                                    for (let i = 0; i < 12; i++) { // Show next 12 hours
+                                        const hour = data.hourly[i];
+                                        const date = new Date(hour.dt * 1000);
+                                        const hours = date.getHours();
+                                        const temp = hour.main.temp;
+                                        const desc = hour.weather[0].description;
+                                        const icon = getWeatherIcon(desc, hours >= 6 && hours < 18);
+
+                                        const li = document.createElement('li');
+                                        li.innerHTML = `
+                                        <div class="weather-icon ${icon}"></div>
+                                        <p>${hours}:00 - ${temp}°C, ${desc}</p>
+                                    `;
+                                        hourlyList.appendChild(li);
+                                    }
+                                } else {
+                                    document.getElementById('weather').innerHTML = '<p>Weather data not available.</p>';
+                                }
+                            })
+                            .catch(err => {
+                                document.getElementById('weather').innerHTML = '<p>Error fetching weather data.</p>';
+                            });
+                    },
+                    function () {
+                        // Default location for Tunis
+                        const defaultLat = 36.8000; // Tunis latitude
+                        const defaultLon = 10.1797; // Tunis longitude
+
+                        const userMarker = L.marker([defaultLat, defaultLon]).addTo(map)
+                            .bindPopup('You are in Tunis!')
+                            .openPopup();
+
+                        map.setView([defaultLat, defaultLon], 13);
+
+                        // Fetch weather data for Tunis
+                        fetch(`/weather?lat=${defaultLat}&lon=${defaultLon}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data && data.weather && data.main) {
+                                    const weatherCondition = data.weather[0].main.toLowerCase();
+                                    const iconClass = getWeatherIcon(weatherCondition);
+
+                                    const weatherHTML = `
+                                    <div class="weather-info">
+                                        <div class="weather-icon ${iconClass}"></div>
+                                        <div class="weather-details">
+                                            <h2>Weather Information</h2>
+                                            <p>Temperature: ${data.main.temp}°C</p>
+                                            <p>Condition: ${data.weather[0].description}</p>
+                                        </div>
+                                    </div>
+                                    <div class="location">${data.name}</div>
+                                `;
+                                    document.getElementById('weather').innerHTML = weatherHTML;
+                                } else {
+                                    document.getElementById('weather').innerHTML = '<p>Weather data not available.</p>';
+                                }
+                            });
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        function getWeatherIcon(condition, isDay) {
+            if (condition.includes('rain')) {
+                return 'rainy'; // Use rainy icon for all rain conditions
+            } else if (condition.includes('cloud')) {
+                return isDay ? 'cloud-day' : 'cloud-night'; // Use day or night cloud icon
+            } else if (condition === 'clear') {
+                return 'sunny'; // Clear weather icon
+            } else if (condition === 'night' || condition.includes('mist')) {
+                return 'moon'; // Moon icon for night or misty conditions
+            } else {
+                return 'sunny'; // Default to sunny if no other conditions match
+            }
+        }
+    </script>
+</body>
+
+</html>

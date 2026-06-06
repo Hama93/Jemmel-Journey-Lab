@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Attractions
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-3">Admin - Manage Attractions</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ 'Edit Attraction' if edit_item else 'Add New Attraction' }}</h5>
+            <form method="POST" action="{% if edit_item %}{{ url_for('main.edit_attraction', attraction_id=edit_item.id) }}{% else %}{{ url_for('main.admin_attractions') }}{% endif %}">
+                <div class="row g-2">
+                    <div class="col-md-4"><input class="form-control" name="name" placeholder="Name" value="{{ edit_item.name if edit_item else '' }}" required></div>
+                    <div class="col-md-4"><input class="form-control" name="city" placeholder="City" value="{{ edit_item.city if edit_item else '' }}" required></div>
+                    <div class="col-md-4"><input class="form-control" name="region" placeholder="Region" value="{{ edit_item.region if edit_item else '' }}"></div>
+                    <div class="col-md-4"><input class="form-control" name="category" placeholder="Category" value="{{ edit_item.category if edit_item else '' }}" required></div>
+                    <div class="col-md-2"><input class="form-control" type="number" step="0.01" min="0" name="budget_min" placeholder="Min budget" value="{{ edit_item.budget_min if edit_item else '' }}"></div>
+                    <div class="col-md-2"><input class="form-control" type="number" step="0.01" min="0" name="budget_max" placeholder="Max budget" value="{{ edit_item.budget_max if edit_item else '' }}"></div>
+                    <div class="col-md-2"><input class="form-control" type="number" step="0.5" min="0.5" name="duration_hours" placeholder="Hours" value="{{ edit_item.duration_hours if edit_item else '2' }}"></div>
+                    <div class="col-md-12"><textarea class="form-control" name="description" rows="2" placeholder="Description">{{ edit_item.description if edit_item else '' }}</textarea></div>
+                    <div class="col-md-3"><input class="form-control" type="number" step="0.0001" name="lat" placeholder="Latitude" value="{{ edit_item.lat if edit_item else '' }}"></div>
+                    <div class="col-md-3"><input class="form-control" type="number" step="0.0001" name="lon" placeholder="Longitude" value="{{ edit_item.lon if edit_item else '' }}"></div>
+                    <div class="col-md-6"><input class="form-control" name="image_url" placeholder="Image URL" value="{{ edit_item.image_url if edit_item else '' }}"></div>
+                    <div class="col-12 d-flex gap-2">
+                        <button class="btn btn-primary" type="submit">{{ 'Update' if edit_item else 'Add' }}</button>
+                        {% if edit_item %}
+                        <a class="btn btn-outline-secondary" href="{{ url_for('main.admin_attractions') }}">Cancel edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h4>Existing Attractions</h4>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Category</th>
+                    <th>Budget</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in attractions %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.city }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.budget_min }} - {{ item.budget_max }} TND</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('main.edit_attraction', attraction_id=item.id) }}">Edit</a>
+                        <form method="POST" action="{{ url_for('main.delete_attraction', attraction_id=item.id) }}" style="display: inline;">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No attractions yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

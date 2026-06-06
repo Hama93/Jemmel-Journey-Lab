@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Destinations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        .destination-card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Recommended Destinations</h1>
+        <div class="row">
+            {% if destinations %}
+                {% for destination in destinations %}
+                    <div class="col-md-4">
+                        <div class="card destination-card">
+                            <img src="{{ destination.image_url }}" class="card-img-top" alt="{{ destination.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">Place: {{ destination.name }}</h5>
+                                <p class="card-text"><strong>Category:</strong> {{ destination.category }}</p>
+                                <p class="card-text"><strong>Location:</strong> {{ destination.location }}</p>
+                                <p class="card-text"><strong>Budget:</strong> {{ destination.budget }}</p>
+                                <a href="/weather-location?location={{destination.location}}" class="card-text" target="_blank"><strong>Get weather in this location</strong></a><br>
+                                <a href="/find_places?state={{destination.location}}" class="card-text" target="_blank"><strong>Get more local experiences in this location</strong></a><br>
+                                <button class="btn btn-secondary" onclick="showItinerary('{{ destination.latitude }},{{ destination.longitude }}')">Show Itinerary</button>
+                                <a href="{{ url_for('main.locationChoix', destination_name=destination.name) }}" class="btn btn-primary">View Touristics activities of the place</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-warning" role="alert">
+                        No destinations found based on your preferences. Please adjust your criteria and try again.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <a href="/" class="btn btn-secondary mt-4">Back to Home</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

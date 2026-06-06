@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+Custom Itinerary
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-3">Generate Custom Itinerary</h2>
+
+    {% if error %}
+    <div class="alert alert-warning">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('main.itinerary') }}" class="row g-2 mb-4">
+        <div class="col-md-3">
+            <input class="form-control" type="text" name="city" placeholder="City" value="{{ form_values.city if form_values else '' }}">
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" type="text" name="category" placeholder="Category" value="{{ form_values.category if form_values else '' }}">
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="number" min="1" name="days" placeholder="Days" value="{{ form_values.days if form_values else 2 }}" required>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" type="number" min="1" step="0.01" name="budget" placeholder="Total budget" value="{{ form_values.budget if form_values else '' }}" required>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-primary" type="submit">Generate</button>
+        </div>
+    </form>
+
+    {% if plan %}
+    <div class="alert alert-success">Estimated total cost: {{ estimated_total }} TND</div>
+    {% for day in plan %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Day {{ day.day }}</h5>
+            <ul class="mb-0">
+                {% for activity in day.activities %}
+                <li>
+                    {{ activity.name }} ({{ activity.city }}) - {{ activity.duration_hours }}h - {{ activity.estimated_cost }} TND
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+    {% elif form_values %}
+    <div class="alert alert-info">No plan could be generated with these constraints. Try increasing budget or changing filters.</div>
+    {% endif %}
+</div>
+{% endblock %}

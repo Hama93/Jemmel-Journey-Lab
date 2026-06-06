@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Tunisa Tourism Dashboard</title>
+    <!-- base:css -->
+    <link rel="stylesheet" href="static/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="static/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="static/css/style_spica.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="static/img/favicon.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link href="dist/css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" src="dist/js/jquery-1.10.2.js"></script>
+</head>
+
+<body>
+    <div class="container-scroller d-flex">
+        <!-- partial:./partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item sidebar-category">
+                    <p>Navigation</p>
+                    <span></span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">
+                        <i class="mdi mdi-view-quilt menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                        <!-- <div class="badge badge-info badge-pill">2</div> -->
+                    </a>
+                </li>
+                <li class="nav-item sidebar-category">
+                    <p>What to do next?</p>
+                    <span></span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/local_experiences">
+                        <i class="mdi mdi-magnify menu-icon"></i>
+                        <span class="menu-title">Find local experiences</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pages/charts/chartjs.html">
+                        <i class="mdi mdi-clock menu-icon"></i>
+                        <span class="menu-title">Find iteneraries</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pages/icons/mdi.html">
+                        <i class="mdi mdi-emoticon menu-icon"></i>
+                        <span class="menu-title">Icons</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper" style="background-image: url('/static/img/other/navbar-cover.jpg');
+        background-size: cover;
+       ">
+            <!-- partial:./partials/_navbar.html -->
+            <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-xl-start">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button"
+                        data-toggle="minimize">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                    <!--<div class="navbar-brand-wrapper">
+            <a class="navbar-brand brand-logo" href="index.html"><img src="static/img/logo.svg" alt="logo"/></a>
+            <a class="navbar-brand brand-logo-mini" href="index.html"><img src="static/img/logo-mini.svg" alt="logo"/></a>
+          </div>-->
+                    <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, {{username}}</h4>
+                </div>
+                <div class="navbar-menu-wrapper navbar-search-wrapper d-none d-lg-flex align-items-center">
+
+                    <ul class="navbar-nav navbar-nav-right">
+                        <li class="nav-item nav-profile dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                <img src="static/img/faces/face5.jpg" alt="profile" />
+                                <span class="nav-profile-name">{{username}}</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                                aria-labelledby="profileDropdown">
+                                <a class="dropdown-item">
+                                    <i class="mdi mdi-settings text-primary"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="/signout">
+                                    <i class="mdi mdi-logout text-primary"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link icon-link">
+                                <i class="mdi mdi-plus-circle-outline"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{url_for('main.preferences')}}" class="nav-link icon-link">
+                                <i class="mdi mdi-web"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <h6>Textual positive reviews score</h6>
+                    <div id='rater'></div>
+                    {% if llist %}
+                    {% for ll in llist %}
+                    <div class="card">
+                        <div class="card-header">
+                            {{place_name}}
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>{{ll.get('review_text')}}</p>
+                                <footer class="blockquote-footer">Author: <cite
+                                        title="Source Title">{{ll.get('author_title')}}</cite></footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="card">
+                        <div class="card-header">
+                            {{place_name}}
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>This place either got only bad reputation or no textual reviews at all</p>
+                            </blockquote>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <footer class="footer">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright ©
+                                    ia_warriors 2024</span>
+                                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Distributed
+                                    By: <a href="https://www.themewagon.com/" target="_blank">Tunisie Tourism</a></span>
+                                <!--<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>-->
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+    <!-- base:js -->
+    <script src="static/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <script src="static/vendors/chart.js/Chart.min.js"></script>
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="static/js/off-canvas.js"></script>
+    <script src="static/js/hoverable-collapse.js"></script>
+    <script src="static/js/template.js"></script>
+    <!-- endinject -->
+    <!-- plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- Custom js for this page-->
+    <script src="static/js/dashboard.js"></script>
+    <!-- End custom js for this page-->
+    <script src="https://unpkg.com/rater-js"></script>
+    <script>
+        var myRating = raterJs({
+            element: document.querySelector('#rater'),
+            rateCallback: function(rate, done){
+                this.setRating(rate);
+                done();
+            }
+        });
+        myRating.setRating(parseFloat('{{score}}'));
+    </script>
+</body>
+
+</html>

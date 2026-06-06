@@ -1,0 +1,171 @@
+/* General Body Styling with Blue Gradient Background */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(-45deg, #4A90E2, #5DADE2, #2471A3, #1F618D);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #333;
+    overflow-x: hidden;
+    text-align: center;
+    position: relative;
+}
+
+/* Animated Gradient Background */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Raindrop Overlay */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+    background-size: 2px 50px;
+    background-position: 0 -50px;
+    animation: rain 4s linear infinite; /* Slower raindrop speed */
+    mix-blend-mode: overlay;
+}
+
+/* Slower Raindrop Animation */
+@keyframes rain {
+    0% { background-position: 0 -50px; }
+    100% { background-position: 0 100vh; }
+}
+
+/* Title Styling */
+h1 {
+    font-family: 'Georgia', serif;
+    font-size: 3em;
+    color: #F0F8FF;
+    text-align: center;
+    margin: 20px 0;
+    animation: glow 2s ease-out infinite alternate;
+    text-shadow: 0 0 8px #000, 0 0 16px #000, 0 0 24px #333;
+}
+h2 {
+    color: #000;
+}
+@keyframes glow {
+    0% { text-shadow: 0 0 8px #000, 0 0 16px #333; }
+    100% { text-shadow: 0 0 12px #000, 0 0 24px #333; }
+}
+
+/* Container Styling */
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin: 20px auto;
+    max-width: 1200px;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Map Styling with Black Glowing Border */
+#map {
+    height: 600px;
+    width: 55%;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+}
+
+/* Weather Card Styling */
+.weather-container {
+    width: 35%;
+    padding: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+}
+.weather-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 10px #333, 0 0 20px #111;
+}
+
+/* Weather Card Header */
+.weather-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.weather-icon {
+    width: 70px;
+    height: 70px;
+    background-size: cover;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sunny { background-image: url('/static/icons/sun.png'); }
+.cloud-day { background-image: url('/static/icons/cloud_day.png'); }
+.cloud-night { background-image: url('/static/icons/cloud_night.png'); }
+.rainy { background-image: url('/static/icons/rain.png'); }
+.moon { background-image: url('/static/icons/moon.png'); }
+
+/* Weather Details */
+.weather-details {
+    text-align: left;
+    color: #FFF;
+}
+.weather-details h2 {
+    margin: 0;
+    font-size: 1.8em;
+}
+.location {
+    font-size: 1.1em;
+    color: #CCC;
+    margin-top: 10px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #d0e6f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #2980b9;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #1C658C;
+}
+#hourly-forecast {
+    margin-top: 20px;
+    text-align: left;
+    color: #FFF;
+}
+
+#hourly-forecast ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#hourly-forecast li {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.weather-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}

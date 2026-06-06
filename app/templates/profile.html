@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+Journey Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>Welcome, {{ username }}</h2>
+    <p class="text-muted">Role: {{ role }}</p>
+    {% if error %}
+    <div class="alert alert-warning">{{ error }}</div>
+    {% endif %}
+
+    <div class="row g-3 mt-2">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5>Attractions</h5>
+                    <p>Browse curated destinations by city, budget, and category.</p>
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('main.attractions') }}">Open</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5>Custom Itinerary</h5>
+                    <p>Build a day-by-day plan aligned with your budget and interests.</p>
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('main.itinerary') }}">Generate</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5>AI Assistant</h5>
+                    <p>Ask for recommendations and route guidance.</p>
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('main.assistant_page') }}">Ask AI</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if role == 'admin' %}
+    <div class="mt-4">
+        <a class="btn btn-dark" href="{{ url_for('main.admin_attractions') }}">Admin: Manage Attractions</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

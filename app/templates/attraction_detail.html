@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+Attraction Details
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {% if error %}
+    <div class="alert alert-warning">{{ error }}</div>
+    {% endif %}
+
+    {% if attraction %}
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <h2>{{ attraction.name }}</h2>
+            <p><strong>City:</strong> {{ attraction.city }}</p>
+            <p><strong>Category:</strong> {{ attraction.category }}</p>
+            <p><strong>Budget:</strong> {{ attraction.budget_min }} - {{ attraction.budget_max }} TND</p>
+            <p><strong>Average rating:</strong> {{ avg_rating if avg_rating is not none else 'No ratings yet' }}</p>
+            <p class="mt-3">{{ attraction.description }}</p>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Leave a review</h5>
+                    {% if username %}
+                    <form method="POST" action="{{ url_for('main.add_review', attraction_id=attraction.id) }}">
+                        <div class="mb-2">
+                            <label class="form-label">Rating (1-5)</label>
+                            <input class="form-control" type="number" min="1" max="5" name="rating" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Comment</label>
+                            <textarea class="form-control" name="comment" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                    </form>
+                    {% else %}
+                    <p>Please <a href="{{ url_for('main.signin') }}">sign in</a> to leave a review.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <h4>Visitor Reviews</h4>
+    {% for review in reviews %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <p class="mb-1"><strong>{{ review.username }}</strong> rated {{ review.rating }}/5</p>
+            <p class="mb-0">{{ review.comment }}</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-light">No reviews yet for this attraction.</div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

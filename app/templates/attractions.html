@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}
+Attractions
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-3">Browse Attractions</h2>
+
+    {% if error %}
+    <div class="alert alert-warning">{{ error }}</div>
+    {% endif %}
+
+    <form method="GET" action="{{ url_for('main.attractions') }}" class="row g-2 mb-4">
+        <div class="col-md-3">
+            <input type="text" name="q" value="{{ filters.q if filters else '' }}" class="form-control" placeholder="Search keyword">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="city" value="{{ filters.city if filters else '' }}" class="form-control" placeholder="City">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="category" value="{{ filters.category if filters else '' }}" class="form-control" placeholder="Category">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="budget" value="{{ filters.budget if filters else '' }}" class="form-control" placeholder="Max budget">
+        </div>
+        <div class="col-md-1 d-grid">
+            <button class="btn btn-primary" type="submit">Go</button>
+        </div>
+    </form>
+
+    <div class="row g-3">
+        {% for item in attractions %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                {% if item.image_url %}
+                <img src="{{ item.image_url }}" class="card-img-top" alt="{{ item.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="mb-1"><strong>City:</strong> {{ item.city }}</p>
+                    <p class="mb-1"><strong>Category:</strong> {{ item.category }}</p>
+                    <p class="mb-3"><strong>Budget:</strong> {{ item.budget_min }} - {{ item.budget_max }} TND</p>
+                    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('main.attraction_detail', attraction_id=item.id) }}">View details</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">No attractions found with these filters.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

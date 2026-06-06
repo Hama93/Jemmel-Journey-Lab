@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Préférences de voyage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h3 class="card-title mb-4">Préférences de voyage pour {{ destination_name }}</h3>
+
+        <form id="preferencesForm" class="forms-sample">
+                                        <!-- Profil de l'utilisateur -->
+                                        <div class="form-section active" id="section1">
+                                          <h3>Profil de l'utilisateur</h3>
+                                          <div class="form-group">
+                                              <label for="age">Tranche d'âge :</label>
+                                              <select id="age">
+                                                  <option>18-25</option>
+                                                  <option>26-35</option>
+                                                  <option>36-45</option>
+                                                  <option>46 et plus</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="gender">Genre :</label>
+                                              <select id="gender">
+                                                  <option>Masculin</option>
+                                                  <option>Féminin</option>
+                                                  <option>Autre</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="nationality">Nationalité :</label>
+                                              <input type="text" id="nationality">
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="travelFrequency">Fréquence des voyages en Tunisie :</label>
+                                              <select id="travelFrequency">
+                                                  <option>Élevée</option>
+                                                  <option>Moyenne</option>
+                                                  <option>Basse</option>
+                                              </select>
+                                          </div>
+                                      </div>
+          
+                                      <!-- Préférences de voyage -->
+                                      <div class="form-section" id="section2">
+                                          <h3>Préférences de voyage</h3>
+                                          <div class="form-group">
+                                              <label for="vacationType">Type de vacances :</label>
+                                              <select id="vacationType">
+                                                  <option>Détente</option>
+                                                  <option>Aventure</option>
+                                                  <option>Culturelle</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="budget">Budget :</label>
+                                              <select id="budget">
+                                                  <option>Low</option>
+                                                  <option>Meduim</option>
+                                                  <option>High</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="stayDuration">Durée du séjour :</label>
+                                              <select id="stayDuration">
+                                                  <option>Moins de 2 semaines</option>
+                                                  <option>Moins d'1 mois</option>
+                                                  <option>1 mois et plus</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="season">Saison préférée :</label>
+                                              <select id="season">
+                                                  <option>Hiver</option>
+                                                  <option>Été</option>
+                                                  <option>Automne</option>
+                                                  <option>Printemps</option>
+                                              </select>
+                                          </div>
+                                          <div class="form-group">
+                                              <label for="groupSize">Taille du groupe :</label>
+                                              <select id="groupSize">
+                                                  <option>Moins de 5 personnes</option>
+                                                  <option>5 personnes et plus</option>
+                                              </select>
+                                          </div>
+                                      </div>
+          
+                                      <!-- Intérêts -->
+                                      <div class="form-section" id="section3">
+                                          <h3>Intérêts</h3>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Historical Site"> Historical
+                                                  Site</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Cultural Landmark"> Cultural
+                                                  Landmark</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Eco-tourism Spot"> Eco-tourism
+                                                  Spot</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Natural Landmark"> Natural
+                                                  Landmark</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Museum"> Museum</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Religious Site"> Religious
+                                                  Site</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Local Experience"> Local
+                                                  Experience</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Family Activity"> Family
+                                                  Activity</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Cultural Experience"> Cultural
+                                                  Experience</label>
+                                          </div>
+                                          <div class="form-group">
+                                              <label><input type="checkbox" name="interest" value="Hidden Gem"> Hidden Gem</label>
+                                          </div>
+                                      </div>
+            <button type="submit" class="btn btn-primary">Soumettre</button>
+        </form>
+
+        <div id="recommendationsContainer" class="recommendations-section mt-4" style="display: none;">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Activités recommandées</h4>
+                    <div id="recommendationsList" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('preferencesForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const preferences = {};
+            formData.forEach((value, key) => {
+                preferences[key] = value;
+            });
+
+            const destinationName = "{{ destination_name }}";
+
+            fetch('/submit_location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ destination_name: destinationName, preferences: preferences })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const recommendationsList = document.getElementById('recommendationsList');
+                recommendationsList.innerHTML = data.recommendations;
+                document.getElementById('recommendationsContainer').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

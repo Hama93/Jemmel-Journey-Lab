@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Spica Admin</title>
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- base:css -->
+  <link rel="stylesheet" href="static/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="static/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="static/css/style_spica.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="static/img/favicon.png" />
+  <style>
+    .recommendations-section {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    
+    #recommendationsList {
+        margin-top: 10px;
+        line-height: 1.6;
+    }
+    </style>
+</head>
+<body>
+  <div class="container-scroller d-flex">
+    <!-- partial:./partials/_sidebar.html -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <ul class="nav">
+          <li class="nav-item sidebar-category">
+              <p>Navigation</p>
+              <span></span>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/profile">
+                  <i class="mdi mdi-view-quilt menu-icon"></i>
+                  <span class="menu-title">Dashboard</span>
+                  <!-- <div class="badge badge-info badge-pill">2</div> -->
+              </a>
+          </li>
+          <li class="nav-item sidebar-category">
+              <p>What to do next?</p>
+              <span></span>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/local_experiences">
+                  <i class="mdi mdi-magnify menu-icon"></i>
+                  <span class="menu-title">Find local experiences</span>
+              </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('main.show_recommendation_form')}}">
+              <i class="mdi mdi-clock menu-icon"></i>
+              <span class="menu-title">Find Places</span>
+          </a>
+          </li>
+          <!--<li class="nav-item">
+            <a class="nav-link" href="pages/icons/mdi.html">
+              <i class="mdi mdi-emoticon menu-icon"></i>
+              <span class="menu-title">Icons</span>
+            </a>
+          </li>-->
+      </ul>
+  </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper" style="background-image: url('/static/img/other/navbar-cover.jpg');
+        background-size: cover;
+       ">
+      <!-- partial:./partials/_navbar.html -->
+      <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          <!--<div class="navbar-brand-wrapper">
+            <a class="navbar-brand brand-logo" href="index.html"><img src="static/img/logo.svg" alt="logo"/></a>
+            <a class="navbar-brand brand-logo-mini" href="index.html"><img src="static/img/logo-mini.svg" alt="logo"/></a>
+          </div>-->
+          <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, {{username}}</h4>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item">
+              <!--<h4 class="mb-0 font-weight-bold d-none d-xl-block">Mar 12, 2019 - Apr 10, 2019</h4>-->
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+        <div class="navbar-menu-wrapper navbar-search-wrapper d-none d-lg-flex align-items-center">
+          <ul class="navbar-nav mr-lg-2">
+            <li class="nav-item nav-search d-none d-lg-block">
+              <div class="input-group">
+                <!--<input type="text" class="form-control" placeholder="." aria-label="search" aria-describedby="search">-->
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                <img src="static/img/faces/face5.jpg" alt="profile"/>
+                <span class="nav-profile-name">{{username}}</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                <a class="dropdown-item">
+                  <i class="mdi mdi-settings text-primary"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="/signout">
+                  <i class="mdi mdi-logout text-primary"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+            <!--<li class="nav-item">
+              <a href="{{url_for("main.preferences")}}" class="nav-link icon-link">
+                <i class="mdi mdi-plus-circle-outline"></i>
+              </a>
+            </li>-->
+            <li class="nav-item">
+              <a href="{{url_for('main.preferences')}}" class="nav-link icon-link">
+                <i class="mdi mdi-web"></i>
+              </a>
+            </li>
+            <!--<li class="nav-item">
+              <a href="{{url_for("main.preferences")}}" class="nav-link icon-link">
+                <i class="mdi mdi-clock-outline"></i>
+              </a>
+            </li>-->
+          </ul>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+           
+            <div class="col-12 col-xl-6 grid-margin stretch-card">
+              <div class="row w-100 flex-grow">
+                <div class="col-md-12 stretch-card">
+                    <div class="container mt-5">
+                        <h1>Recommander des Destinations</h1>
+                        <form id="travelForm" action="{{ url_for('main.recommend') }}" method="POST">
+                            {{ form.csrf_token }}
+                            <div class="form-section active" id="section1">
+                                <h3>Make your choice</h3>
+                                <div class="form-group mb-3">
+                                    <label for="budget">Votre budget :</label>
+                                    {{ form.budget(class="form-control") }}
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="category">Category :</label>
+                                    {{ form.category(class="form-control") }}
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">Get Recommendations</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:./partials/_footer.html -->
+        <!--<footer class="footer">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © ia_warriors 2024</span>
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Distributed By: <a href="https://www.themewagon.com/" target="_blank">Tunisie Tourism</a></span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
+              </div>
+            </div>
+          </div>
+        </footer>-->
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="static/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="static/vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="static/js/off-canvas.js"></script>
+  <script src="static/js/hoverable-collapse.js"></script>
+  <script src="static/js/template.js"></script>
+  <!-- endinject -->
+  <!-- plugin js for this page -->
+  <!-- End plugin js for this page -->
+  <!-- Custom js for this page-->
+  <script src="static/js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+  </body>
+
+</html>

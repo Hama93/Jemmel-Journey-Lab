@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="login-page">
+        <div class="form">
+            <h1>Créez votre compte</h1>
+            <form id="signup-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+                
+                <button type="submit">Créer</button>
+                <p class="message">Déjà un compte? <a href="{{ url_for('main.signin') }}">Se connecter</a></p>
+                <div id="error-message" style="color: red;"></div>
+            </form>
+        </div>
+      </div>
+    
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            // Validate input
+            const usernameRegex = /^[a-zA-Z0-9]+$/;
+            if (!usernameRegex.test(username)) {
+                errorMessage.textContent = "Username must contain only letters and numbers.";
+                return;
+            }
+
+            if (password.length < 8 || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+                errorMessage.textContent = "Password must be at least 8 characters long, with at least one uppercase letter and one number.";
+                return;
+            }
+
+            // Call your backend to handle sign up
+            const response = await fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const result = await response.json();
+            if (result.error) {
+                errorMessage.textContent = result.error;
+            } else {
+                // Redirect to the user profile page
+                window.location.href = '/profile';  // Redirect to the profile page
+            }
+        });
+    </script>
+    <!-- partial -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script  src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Jemmel Journey Lab - Home
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <h2 class="mb-3">Jemmel Journey Lab</h2>
+            <p class="lead">Explore curated attractions, collect visitor feedback, generate practical itineraries, and navigate with an integrated travel assistant.</p>
+            <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-primary" href="{{ url_for('main.attractions') }}">Browse Attractions</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('main.itinerary') }}">Build Itinerary</a>
+                <a class="btn btn-outline-secondary" href="{{ url_for('main.assistant_page') }}">Ask AI Assistant</a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Operations Console</h5>
+                    <p class="mb-2">Admins manage attraction content, pricing ranges, and destination visibility.</p>
+                    <a class="btn btn-sm btn-dark" href="{{ url_for('main.admin_attractions') }}">Open Admin Panel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
