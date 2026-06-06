@@ -12,3 +12,6 @@ def create_app():
     app.register_blueprint(routes.main)
 
     return app
+
+
+app = create_app()
